@@ -1,4 +1,5 @@
 require 'yaml'
+require 'colorize'
 
 MESSAGES = YAML.load_file('rps_lizard_spock.yml')
 VALID_CHOICES = ['r', 'p', 's', 'l', 'sp']
@@ -11,9 +12,11 @@ WIN_SCENARIOS = { rock: ['scissors', 'lizard'],
 YES = ['y']
 NO = ['n']
 MATCH_WIN_NUMBER = 5
+ENTER = ''
+BLANK = "\n"
 
 def prompt(message)
-  puts("...>>#{message}")
+  puts("      #{message}")
 end
 
 def win?(first, second)
@@ -33,7 +36,7 @@ end
 def display_choices
   display = []
   GAME_CHOICES.each do |choice|
-    display << choice + ' (' + VALID_CHOICES[GAME_CHOICES.index(choice)] + ')'
+    display << choice + ' (' + VALID_CHOICES[GAME_CHOICES.index(choice)].upcase.yellow + ')'
   end
   display.join(', ')
 end
@@ -51,8 +54,8 @@ def game_choice
   end
 end
 
-def retrieve_continue_answer(initial_msg, criteria_msg)
-  puts "\n"
+def continue?(initial_msg, criteria_msg)
+  3.times {puts BLANK}
   prompt(initial_msg)
 
   loop do
@@ -64,15 +67,18 @@ def retrieve_continue_answer(initial_msg, criteria_msg)
 end
 
 def display_welcome
-  puts "\n"
-  prompt(format(MESSAGES['rpsls_intro'], game_name: GAME_CHOICES.join(', ')))
+  puts BLANK
+  prompt(format(MESSAGES['rpsls_intro'], game_name: 'ROCK, PAPER, SCISSORS, LIZARD, SPOCK.'))
+  puts BLANK
   prompt(format(MESSAGES['rpsls_description'],
                 match_condition: MATCH_WIN_NUMBER))
-  puts "\n"
+  puts BLANK
 end
 
 def display_game_start(scores)
+  puts BLANK
   puts format(MESSAGES['game_num'], number: scores[:total_games])
+  puts BLANK
   prompt(display_score(scores))
 end
 
@@ -109,34 +115,28 @@ end
 display_welcome
   
 loop do # Match loop begin
+  
   puts MESSAGES['new_match']
-
   match_scores = { player: 0,
                    computer: 0,
                    total_games: 1 }
 
-  loop do # Game loop begin
+  loop do 
+    
     display_game_start(match_scores)
-
-    # Player choice
+    puts BLANK
     choice = game_choice
-
-    # Computer choice
     computer_choice = GAME_CHOICES.sample
-
-    # Display choices
     prompt(format(MESSAGES['selected_choices'],
-                  player: choice,
-                  computer: computer_choice))
+                  player: choice.upcase.red,
+                  computer: computer_choice.upcase.red))
 
     result = display_result(choice, computer_choice)
+    puts BLANK
     prompt(result)
-
+    puts BLANK
     update_scores(result, match_scores)
-
     prompt(display_score(match_scores))
-
-    # Check if player/computer has enough wins to end match
     result = display_match_winner(match_scores)
 
     unless result.nil?
@@ -145,16 +145,21 @@ loop do # Match loop begin
     end
 
     # Continue match?
-    answer = retrieve_continue_answer(MESSAGES['continue_match'],
-                                      MESSAGES['continue_match_choices'])
-    break if NO.include?(answer)
+    loop do
+     2.times {puts BLANK}
+     prompt(MESSAGES['press_enter'])
+     answer = gets.chomp
+     break if answer == ENTER
+    end
+                    
+    
 
     system("clear")
   end # Game loop end
 
   # New match?
-  answer = retrieve_continue_answer(MESSAGES['another_match'],
-                                    MESSAGES['another_match_choices'])
+  answer = continue?(MESSAGES['another_match'],
+                    MESSAGES['another_match_choices'])
   break if NO.include?(answer)
 
   system("clear")
