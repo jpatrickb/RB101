@@ -1,0 +1,61 @@
+
+1.
+A method that returns the sum of two integers.
+
+ask for an integer
+store it as a value
+ask for a second integer
+store it as a value
+
+add the two together
+print out the result 
+
+
+START
+GET value a
+GET value b
+
+PRINT value a + b
+END
+
+
+2.
+A method that takes an array of strings and returns a
+string that is them all concatenated together.
+
+Get the array of strings and set a value to it.
+iterate over the array in such a way that puts all the 
+words in the string as one 'sentence'.
+
+print sentence
+
+START
+GET array
+SET it to a variable
+SET each element in the array to a variable by 
+iterating over it.
+PRINT the array variables added together
+END
+
+
+3.
+A method that takes an array of integers, and returns
+a new array with every other element.
+
+Get the array values and assign it to a variable
+
+Iterate over each element of the variable and remove all the odd 
+index numbers.
+
+Print the new array.
+
+START
+GET array
+SET array = input from user
+
+WHILE index of number is nil or odd
+    keep in array
+ELSE
+    delete from array
+
+PRINT new array
