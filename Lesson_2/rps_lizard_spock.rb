@@ -25,11 +25,11 @@ end
 
 def display_result(player, computer)
   if win?(player, computer)
-    MESSAGES['win']
+    MESSAGES['win'].green
   elsif win?(computer, player)
-    MESSAGES['lose']
+    MESSAGES['lose'].red
   else
-    MESSAGES['tie']
+    MESSAGES['tie'].yellow
   end
 end
 
@@ -68,7 +68,7 @@ end
 
 def display_welcome
   puts BLANK
-  prompt(format(MESSAGES['rpsls_intro'], game_name: 'ROCK, PAPER, SCISSORS, LIZARD, SPOCK.'))
+  prompt(format(MESSAGES['rpsls_intro'], game_name: 'ROCK, PAPER, SCISSORS, LIZARD, SPOCK..'))
   puts BLANK
   prompt(format(MESSAGES['rpsls_description'],
                 match_condition: MATCH_WIN_NUMBER))
@@ -82,10 +82,10 @@ def display_game_start(scores)
   prompt(display_score(scores))
 end
 
-def update_scores(game_result,scores)
-  if game_result == MESSAGES['win']
+def update_scores(game_result, scores)
+  if game_result == MESSAGES['win'].green
     scores[:player] += 1
-  elsif game_result == MESSAGES['lose']
+  elsif game_result == MESSAGES['lose'].red
     scores[:computer] += 1
   end
 
@@ -111,7 +111,7 @@ def display_match_winner(scores)
 end
 
 #start of game
-
+system("clear")
 display_welcome
   
 loop do # Match loop begin
@@ -121,14 +121,14 @@ loop do # Match loop begin
                    computer: 0,
                    total_games: 1 }
 
-  loop do 
+  loop do # game loop
     
     display_game_start(match_scores)
     puts BLANK
     choice = game_choice
     computer_choice = GAME_CHOICES.sample
     prompt(format(MESSAGES['selected_choices'],
-                  player: choice.upcase.red,
+                  player: choice.upcase.green,
                   computer: computer_choice.upcase.red))
 
     result = display_result(choice, computer_choice)
@@ -140,11 +140,21 @@ loop do # Match loop begin
     result = display_match_winner(match_scores)
 
     unless result.nil?
+      system("clear")
+      5.times {puts BLANK}
+      prompt(format(MESSAGES['selected_choices'],
+                  player: choice.upcase.green,
+                  computer: computer_choice.upcase.red))
+      2.times {puts BLANK}
+      prompt(display_result(choice, computer_choice))
+      puts BLANK
+      prompt(display_score(match_scores))
+      puts BLANK
       prompt(result)
       break
     end
 
-    # Continue match?
+    # tansition to next game...
     loop do
      2.times {puts BLANK}
      prompt(MESSAGES['press_enter'])
@@ -165,7 +175,7 @@ loop do # Match loop begin
   system("clear")
 end # Match loop end
 
-puts("\n")
+puts BLANK
 prompt(MESSAGES['thank_you'])  
 
     
