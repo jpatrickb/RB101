@@ -1,4 +1,5 @@
 #4
+
 def dot_separated_ip_address?(input_string)
   dot_separated_words = input_string.split(".")
   return false unless dot_separated_words.size == 4
