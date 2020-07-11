@@ -1,0 +1,28 @@
+
+1. Initialize deck
+2. Deal cards to player and dealer
+3. Player turn: hit or stay
+  - repeat until bust or "stay"
+4. If player bust, dealer wins.
+5. Dealer turn: hit or stay
+  - repeat until total >= 17
+6. If dealer bust, player wins.
+7. Compare cards and declare winner.
+
+
+1. Initialize deck
+    a. deck as array of sub-arrays, each with two elements; suit and card value
+
+2. Deal cards to player and dealer
+    a. the deck will have a random selection process and the cards dealt need to be unavailable 
+    after being dealt
+    b. the screen should display the two player cards and one of the dealer's cards
+
+3. Player decides to hit or stay, the cards are tallied and loop until stay or bust
+4. If player busted, dealer wins
+5. Dealer hits until his total >= 17, then either stay or bust
+6. Player wins if dealer is busted
+7. compare cards and declare winner
+
+
+
