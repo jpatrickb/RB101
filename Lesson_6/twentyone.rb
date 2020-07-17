@@ -5,34 +5,31 @@ CARDS = ['Ace', '2', '3', '4', '5', '6', '7', '8',
           '9', '10', 'Jack', 'Queen', 'King']
 WINNING_HAND_SCORE = 21
 COMPUTER_HIT_SCORE = 17
+GAMES_TO_WIN = 5
 
 def build_deck(array)
   deck = []
   array.each do |element|
-    deck << [element, 'H']
-    deck << [element, 'S']
-    deck << [element, 'C']
-    deck << [element, 'D']
+    deck << [element, 'Hearts']
+    deck << [element, 'Diamonds']
+    deck << [element, 'Clubs']
+    deck << [element, 'Spades']
   end
   deck
 end
 
 def deal_cards(array)
   hand = []
-  hand << array.slice!(rand(52))
-  hand << array.slice!(rand(52))
+  hand << array.shuffle.pop
+  hand << array.shuffle.pop
   hand
 end
 
 def translate_card(array)
-  suit = 'Hearts' if array[1] == 'H'
-  suit = 'Spades' if array[1] == 'S'
-  suit = 'Clubs' if array[1] == 'C'
-  suit = 'Diamonds' if array[1] == 'D'
-  card = "#{array[0]} of #{suit}".black if suit == 'Spades'
-  card = "#{array[0]} of #{suit}".black if suit == 'Clubs'
-  card = "#{array[0]} of #{suit}".red if suit == 'Hearts'
-  card = "#{array[0]} of #{suit}".red if suit == 'Diamonds'
+  suit = array[1]
+  value = array[0]
+  card = "#{value} of #{suit}".black if suit == 'Spades' || suit == 'Clubs'
+  card = "#{value} of #{suit}".red if suit == 'Hearts' || suit == 'Diamonds'
   card
 end
 
@@ -41,14 +38,13 @@ def tally_cards(hand)
 
   sum = 0
   values.each do |value|
-    if value == "Ace"
-      sum += 11
-    elsif value.to_i == 0 # J, Q, K
-      sum += 10
-    else
-      sum += value.to_i
-    end
-
+    sum = if value == "Ace"
+            sum + 11
+          elsif value.to_i == 0 # J, Q, K
+            sum + 10
+          else
+            sum + value.to_i
+          end
   end
 
   values.select { |value| value == "Ace" }.count.times do
@@ -85,21 +81,19 @@ def player_wins?(player_score, computer_score)
     true
   elsif player_score > WINNING_HAND_SCORE
     false
-  elsif player_score > computer_score
-    true
   else
-    false
+    player_score > computer_score
   end
 end
 
 def tie?(player_score, computer_score)
-  true if player_score == computer_score
+  player_score == computer_score
 end
 
 def announce_winner(player_score, computer_score)
-  if player_wins?(player_score, computer_score) == true
+  if player_wins?(player_score, computer_score)
     "Player is the winner!"
-  elsif tie?(player_score, computer_score) == true
+  elsif tie?(player_score, computer_score)
     "It's a tie."
   else
     "Computer is the winner!"
@@ -114,15 +108,15 @@ def play_again?
 end
 
 def announce_grand_winner(player_round_score, computer_round_score)
-  if player_round_score == 5
+  if player_round_score == GAMES_TO_WIN
     puts "Player is the Grand Winner!"
-  elsif computer_round_score == 5
+  elsif computer_round_score == GAMES_TO_WIN
     puts "Computer is the Grand Winner!"
   end
 end
 
 def grand_winner?(player_round_score, computer_round_score)
-  true if player_round_score == 5 || computer_round_score == 5
+  true if player_round_score == GAMES_TO_WIN || computer_round_score == GAMES_TO_WIN
 end
 
 # game play
@@ -166,7 +160,7 @@ loop do
     end
 
     break if player_score == WINNING_HAND_SCORE
-    break if busted?(player_score) == true
+    break if busted?(player_score)
 
     puts "Computer plays..."
 
